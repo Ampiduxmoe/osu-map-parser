@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>osu_map_parser</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Authors>Ampiduxmoe</Authors>
+    <Version>0.1</Version>
+    <Description>a program that lets you convert .osu files to C# objects</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS0649</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="lexer\**" />
+    <EmbeddedResource Remove="lexer\**" />
+    <None Remove="lexer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="combinedRegex.txt" />
+  </ItemGroup>
+
+</Project>
