@@ -7,7 +7,8 @@
     <LangVersion>latest</LangVersion>
     <Authors>Ampiduxmoe</Authors>
     <Version>0.1</Version>
-    <Description>a program that lets you convert .osu files to C# objects</Description>
+    <Description>a program that allows you to convert .osu files to C# objects</Description>
+    <AssemblyName>bmap_parser</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,6 +23,10 @@
 
   <ItemGroup>
     <None Remove="combinedRegex.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
 
 </Project>

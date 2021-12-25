@@ -1,9 +1,7 @@
 ﻿using osu_map_parser.beatmap.sections;
 
-namespace osu_map_parser.beatmap
-{
-    class Beatmap
-    {
+namespace osu_map_parser.beatmap {
+    class Beatmap {
         public readonly SourceFile SourceFile;
         public readonly int? FileFormatVersion;
         public readonly GeneralInfo General;
@@ -17,18 +15,17 @@ namespace osu_map_parser.beatmap
 
         public Beatmap
             (
-            SourceFile sourceFile, 
+            SourceFile sourceFile,
             int? fileFormatVersion,
-            GeneralInfo generalInfo, 
-            EditorInfo editorInfo, 
-            MetadataInfo metadataInfo, 
-            DifficultyInfo difficultyInfo, 
-            EventsInfo eventsInfo, 
-            TimingPointsInfo timingPointsInfo, 
-            ColoursInfo coloursInfo, 
+            GeneralInfo generalInfo,
+            EditorInfo editorInfo,
+            MetadataInfo metadataInfo,
+            DifficultyInfo difficultyInfo,
+            EventsInfo eventsInfo,
+            TimingPointsInfo timingPointsInfo,
+            ColoursInfo coloursInfo,
             HitObjectsInfo hitobjectsInfo
-            )
-        {
+            ) {
             SourceFile = sourceFile;
             FileFormatVersion = fileFormatVersion;
             General = generalInfo;

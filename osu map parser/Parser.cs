@@ -9,26 +9,22 @@ using System.Linq;
 using osu_map_parser.beatmap.sections.utils;
 using System.IO;
 
-namespace osu_map_parser
-{
+namespace osu_map_parser {
     // Currently does not fully support old file formats and game modes other than standard
     // Fully supports osu file format v14 except events
-    class Parser
-    {
+    class Parser {
         public readonly SourceFile SourceFile;
 
         private int currerntLineNo;
         private int currentInlineCursorPos;
         private string CurrerntLine => SourceFile.Lines[currerntLineNo].Trim();
-        public Parser(SourceFile sourceFile)
-        {
+        public Parser(SourceFile sourceFile) {
             SourceFile = sourceFile;
             currerntLineNo = 0;
             currentInlineCursorPos = 0;
         }
 
-        public Beatmap ParseBeatmap()
-        {
+        public Beatmap ParseBeatmap() {
             int? fileFormatVersion = null;
             GeneralInfo generalInfo = null;
             EditorInfo editorInfo = null;
@@ -38,19 +34,15 @@ namespace osu_map_parser
             TimingPointsInfo timingPointsInfo = null;
             ColoursInfo coloursInfo = null;
             HitObjectsInfo hitObjectsInfo = null;
-            try
-            {
+            try {
                 fileFormatVersion = ParseFileFormatVersion();
                 generalInfo = ParseGeneralInfo();
-                if ((GameMode)generalInfo.Mode != GameMode.osu)
-                {
+                if ((GameMode)generalInfo.Mode != GameMode.osu) {
                     return null;
                 }
                 var section = GetCurrentLineSection();
-                while (section != null)
-                {
-                    switch (section)
-                    {
+                while (section != null) {
+                    switch (section) {
                         case "Editor":
                             editorInfo = ParseEditorInfo();
                             break;
@@ -82,8 +74,7 @@ namespace osu_map_parser
                     section = GetCurrentLineSection();
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new Exception(SourceFile.CounstructErrorMessage(e.Message, currerntLineNo, currentInlineCursorPos));
             }
             AssertSectionInfoNotNull(generalInfo);
@@ -105,11 +96,10 @@ namespace osu_map_parser
                 hitObjectsInfo
                 );
             return beatmap;
-            
+
         }
 
-        private int ParseFileFormatVersion()
-        {
+        private int ParseFileFormatVersion() {
             ResetCursor();
             ExpectFileFormatVersion();
             var regex = new Regex(@"[1-9][0-9]*");
@@ -119,15 +109,13 @@ namespace osu_map_parser
             return version;
         }
 
-        private GeneralInfo ParseGeneralInfo()
-        {
+        private GeneralInfo ParseGeneralInfo() {
             ResetCursor();
             ExpectSection("General");
             ReadNextLine();
             var generalInfo = new GeneralInfo();
             var splitString = ": ";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var option = CurrerntLine.Split(splitString.Trim()).Select(s => s.Trim()).ToArray();
                 MoveCursor(option[0].Length + splitString.Length);
@@ -137,31 +125,25 @@ namespace osu_map_parser
             return generalInfo;
         }
 
-        private EditorInfo ParseEditorInfo()
-        {
+        private EditorInfo ParseEditorInfo() {
             // This section is not present in some versions
-            try
-            { 
+            try {
                 ExpectSection("Editor");
             }
-            catch
-            {
+            catch {
                 return null;
             }
             ReadNextLine();
             var editorInfo = new EditorInfo();
             var splitString = ": ";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var option = CurrerntLine.Split(splitString.Trim()).Select(s => s.Trim()).ToArray();
                 MoveCursor(option[0].Length + splitString.Length);
-                if (option[0] == "Bookmarks")
-                {
+                if (option[0] == "Bookmarks") {
                     editorInfo.Bookmarks = option[1].Split(",").Select(s => int.Parse(s)).ToList();
                 }
-                else
-                {
+                else {
                     SetPrimitiveFieldValue(editorInfo, option[0], option[1]);
                 }
                 ReadNextLine();
@@ -169,24 +151,20 @@ namespace osu_map_parser
             return editorInfo;
         }
 
-        private MetadataInfo ParseMetadataInfo()
-        {
+        private MetadataInfo ParseMetadataInfo() {
             ResetCursor();
             ExpectSection("Metadata");
             ReadNextLine();
             var metadataInfo = new MetadataInfo();
             var splitString = ":";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var option = CurrerntLine.Split(splitString, 2);
                 MoveCursor(option[0].Length + splitString.Length);
-                if (option[0] == "Tags")
-                {
+                if (option[0] == "Tags") {
                     metadataInfo.Tags = option[1].Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
-                else
-                {
+                else {
                     SetPrimitiveFieldValue(metadataInfo, option[0], option[1]);
                 }
                 ReadNextLine();
@@ -194,15 +172,13 @@ namespace osu_map_parser
             return metadataInfo;
         }
 
-        private DifficultyInfo ParseDifficultyInfo()
-        {
+        private DifficultyInfo ParseDifficultyInfo() {
             ResetCursor();
             ExpectSection("Difficulty");
             ReadNextLine();
             var difficultyInfo = new DifficultyInfo();
             var splitString = ":";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var option = CurrerntLine.Split(splitString);
                 MoveCursor(option[0].Length + splitString.Length);
@@ -212,20 +188,17 @@ namespace osu_map_parser
             return difficultyInfo;
         }
 
-        private EventsInfo ParseEventsInfo()
-        {
+        private EventsInfo ParseEventsInfo() {
             ResetCursor();
             ExpectSection("Events");
             ReadNextLine();
             var eventsInfo = new EventsInfo();
             eventsInfo.List = new List<Event>();
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ReadNextLine();
                 // It is a bit complicated so I'll just skip this section
                 continue;
-                if (CurrerntLine.Substring(0, 2) == "//")
-                {
+                if (CurrerntLine.Substring(0, 2) == "//") {
                     continue;
                 }
                 var parameters = CurrerntLine.Split(",");
@@ -234,16 +207,14 @@ namespace osu_map_parser
             return eventsInfo;
         }
 
-        private TimingPointsInfo ParseTimingPointsInfo()
-        {
+        private TimingPointsInfo ParseTimingPointsInfo() {
             ResetCursor();
             ExpectSection("TimingPoints");
             ReadNextLine();
             var timingPointsInfo = new TimingPointsInfo();
             timingPointsInfo.List = new List<TimingPoint>();
             var splitString = ",";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var parameters = CurrerntLine.Split(splitString);
                 TimingPoint t = new TimingPoint();
@@ -255,8 +226,7 @@ namespace osu_map_parser
                 MoveCursor(parameters[1].Length + splitString.Length);
 
                 // osu file format v3 timing points had only time and beat length
-                if (parameters.Length > 2)
-                {
+                if (parameters.Length > 2) {
                     t.Meter = int.Parse(parameters[2]);
                     MoveCursor(parameters[2].Length + splitString.Length);
 
@@ -270,15 +240,13 @@ namespace osu_map_parser
                     MoveCursor(parameters[5].Length + splitString.Length);
 
                     t.Uninherited = parameters.Length > 6 ? byte.Parse(parameters[6]) : (byte)1;
-                    if (parameters.Length > 6)
-                    {
+                    if (parameters.Length > 6) {
                         MoveCursor(parameters[6].Length + splitString.Length);
                     }
 
                     t.Effects = parameters.Length > 7 ? int.Parse(parameters[7]) : (int)Effect.None;
                 }
-                else
-                {
+                else {
                     t.Meter = 4;
                     t.SampleSet = (int)SampleSet.Normal;
                     t.SampleIndex = 0;
@@ -292,22 +260,18 @@ namespace osu_map_parser
             return timingPointsInfo;
         }
 
-        private ColoursInfo ParseColoursInfo()
-        {
+        private ColoursInfo ParseColoursInfo() {
             // This section is not present in some versions
-            try
-            {
+            try {
                 ExpectSection("Colours");
             }
-            catch
-            {
+            catch {
                 return null;
             }
             ReadNextLine();
             var coloursInfo = new ColoursInfo();
             var splitString = " : ";
-            while (!CurrentLineIsSection)
-            {
+            while (!CurrentLineIsSection) {
                 ResetCursor();
                 var option = CurrerntLine.Split(splitString.Trim()).Select(s => s.Trim()).ToArray();
                 MoveCursor(option[0].Length + splitString.Length);
@@ -324,16 +288,14 @@ namespace osu_map_parser
                 colour.B = int.Parse(rgb[2]);
 
                 ResetCursor();
-                if (CurrentLineIsCombo)
-                {
+                if (CurrentLineIsCombo) {
                     coloursInfo.Combos ??= new Dictionary<int, Colour>();
                     MoveCursor("Combo".Length);
                     var regex = new Regex(@"[1-9]");
                     var comboNo = int.Parse(regex.Match(option[0]).Value);
                     coloursInfo.Combos.Add(comboNo, colour);
                 }
-                else
-                {
+                else {
                     coloursInfo.GetType().GetField(option[0]).SetValue(coloursInfo, colour);
                 }
                 ReadNextLine();
@@ -342,16 +304,14 @@ namespace osu_map_parser
             return coloursInfo;
         }
 
-        private HitObjectsInfo ParseHitObjectsInfo()
-        {
+        private HitObjectsInfo ParseHitObjectsInfo() {
             ResetCursor();
             ExpectSection("HitObjects");
             ReadNextLine();
             var hitobjectsInfo = new HitObjectsInfo();
             hitobjectsInfo.List = new List<HitObject>();
             var splitString0 = ",";
-            while (currerntLineNo < SourceFile.Lines.Length)
-            {
+            while (currerntLineNo < SourceFile.Lines.Length) {
                 ResetCursor();
                 var parameters = CurrerntLine.Split(splitString0);
                 HitObject h = new HitObject();
@@ -366,13 +326,12 @@ namespace osu_map_parser
 
                 h.Type = int.Parse(parameters[3]);
                 MoveCursor(parameters[3].Length + splitString0.Length);
-                
+
                 h.HitSound = int.Parse(parameters[4]);
                 MoveCursor(parameters[4].Length + splitString0.Length);
-                
+
                 var hitSampleParamsIndex = -1;
-                switch (h.GetHitObjectType())
-                {
+                switch (h.GetHitObjectType()) {
                     case HitObjectType.None:
                         ResetCursor();
                         MoveCursor(string.Join(splitString0, parameters[0], parameters[1], parameters[2]).Length + 1);
@@ -403,8 +362,7 @@ namespace osu_map_parser
                         MoveCursor(curve[1].Length + splitString2.Length);
 
                         sliderParams.CurvePoints = new List<Point>();
-                        foreach (var pair in curvePoints)
-                        {
+                        foreach (var pair in curvePoints) {
                             var splitString3 = ":";
                             var values = pair.Split(splitString3);
 
@@ -425,13 +383,11 @@ namespace osu_map_parser
                         MoveCursor(sliderParameters[2].Length + splitString1.Length);
 
                         hitSampleParamsIndex = 8;
-                        if (parameters.Length > 8)
-                        {
+                        if (parameters.Length > 8) {
                             var splitString4 = "|";
                             var edgeSounds = sliderParameters[3].Split(splitString4);
                             sliderParams.EdgeSounds = new List<int>();
-                            foreach (var sound in edgeSounds)
-                            {
+                            foreach (var sound in edgeSounds) {
                                 sliderParams.EdgeSounds.Add(int.Parse(sound));
                                 MoveCursor(sound.Length + splitString4.Length);
                             }
@@ -439,13 +395,11 @@ namespace osu_map_parser
                             hitSampleParamsIndex = 9;
                         }
 
-                        if (parameters.Length > 9)
-                        {
+                        if (parameters.Length > 9) {
                             var splitString5 = "|";
                             var edgeSets = sliderParameters[4].Split(splitString5);
                             sliderParams.EdgeSets = new List<EdgeSet>();
-                            foreach (var pair in edgeSets)
-                            {
+                            foreach (var pair in edgeSets) {
                                 var splitString6 = ":";
                                 var normalAndAddition = pair.Split(splitString6);
 
@@ -468,23 +422,20 @@ namespace osu_map_parser
                         spinnerParams.EndTime = int.Parse(parameters[5]);
                         MoveCursor(parameters[5].Length + splitString0.Length);
                         hitSampleParamsIndex = 6;
+                        h.ObjectParams = spinnerParams;
                         break;
                 }
                 string[] hitSampleParameters;
                 var splitString7 = ":";
-                if (hitSampleParamsIndex == parameters.Length || string.IsNullOrWhiteSpace(parameters[hitSampleParamsIndex]))
-                {
+                if (hitSampleParamsIndex == parameters.Length || string.IsNullOrWhiteSpace(parameters[hitSampleParamsIndex])) {
                     hitSampleParameters = "0:0:0:0:".Split(splitString7);
                 }
-                else
-                {
+                else {
                     hitSampleParameters = parameters[hitSampleParamsIndex].Split(splitString7);
                 }
                 var hs = new HitSample();
-                for (int i = 0; i < hitSampleParameters.Length; ++i)
-                {
-                    switch (i)
-                    {
+                for (int i = 0; i < hitSampleParameters.Length; ++i) {
+                    switch (i) {
                         case 0:
                             hs.NormalSet = int.Parse(hitSampleParameters[0]);
                             MoveCursor(hitSampleParameters[0].Length + splitString7.Length);
@@ -510,7 +461,7 @@ namespace osu_map_parser
                             break;
                     }
                 }
-                
+
                 h.HitSample = hs;
                 hitobjectsInfo.List.Add(h);
                 ReadNextLine();
@@ -518,106 +469,83 @@ namespace osu_map_parser
             return hitobjectsInfo;
         }
 
-        private void ExpectSection(string sectionName)
-        {
-            if (CurrerntLine != $"[{sectionName}]")
-            {
+        private void ExpectSection(string sectionName) {
+            if (CurrerntLine != $"[{sectionName}]") {
                 throw new Exception($"Expected {sectionName} section");
             }
         }
 
-        private void ExpectFileFormatVersion()
-        {
+        private void ExpectFileFormatVersion() {
             var regex = new Regex(@"osu file format v[1-9][0-9]*");
             var match = regex.Match(CurrerntLine);
-            if (match.Value != CurrerntLine)
-            {
+            if (match.Value != CurrerntLine) {
                 throw new Exception(SourceFile.CounstructErrorMessage($"Expected osu file format version", currerntLineNo, 0));
             }
         }
 
-        private bool CurrentLineIsSection
-        {
-            get
-            {
+        private bool CurrentLineIsSection {
+            get {
                 var regex = new Regex(@"\[[a-zA-Z]+\]");
                 var match = regex.Match(CurrerntLine);
-                if (match.Value == CurrerntLine)
-                {
+                if (match.Value == CurrerntLine) {
                     return true;
                 }
                 return false;
             }
         }
 
-        private string GetCurrentLineSection()
-        {
-            if (currerntLineNo < SourceFile.Lines.Length && CurrentLineIsSection)
-            {
+        private string GetCurrentLineSection() {
+            if (currerntLineNo < SourceFile.Lines.Length && CurrentLineIsSection) {
                 return CurrerntLine.Substring(1, CurrerntLine.Length - 2);
             }
-            else
-            {
+            else {
                 return null;
             }
         }
 
-        private bool CurrentLineIsCombo
-        {
-            get
-            {
+        private bool CurrentLineIsCombo {
+            get {
                 var regex = new Regex(@"Combo[1-9] : [0-9]{1,3},[0-9]{1,3},[0-9]{1,3}");
                 var match = regex.Match(CurrerntLine);
-                if (match.Value == CurrerntLine)
-                {
+                if (match.Value == CurrerntLine) {
                     return true;
                 }
                 return false;
             }
         }
 
-        private void ReadNextLine()
-        {
-            do
-            {
+        private void ReadNextLine() {
+            do {
                 currerntLineNo++;
             } while (currerntLineNo < SourceFile.Lines.Length && string.IsNullOrWhiteSpace(CurrerntLine));
         }
 
-        private void ResetCursor()
-        {
+        private void ResetCursor() {
             currentInlineCursorPos = 0;
         }
 
-        private void MoveCursor(int offset)
-        {
+        private void MoveCursor(int offset) {
             currentInlineCursorPos += offset;
         }
 
-        private void SetPrimitiveFieldValue(object sectionInfo, string field, string value)
-        {
+        private void SetPrimitiveFieldValue(object sectionInfo, string field, string value) {
             var fieldInfo = sectionInfo.GetType().GetField(field);
-            if (fieldInfo != null)
-            {
+            if (fieldInfo != null) {
                 var type = fieldInfo.FieldType;
                 var converter = TypeDescriptor.GetConverter(type);
                 var newFieldValue = converter.ConvertFromInvariantString(value);
                 fieldInfo.SetValue(sectionInfo, newFieldValue);
             }
-            else
-            {
-                using (var sw = File.AppendText("old_fields.txt"))
-                {
+            else {
+                using (var sw = File.AppendText("old_fields.txt")) {
                     var typeName = sectionInfo.GetType().Name;
                     sw.WriteLine($"{typeName.Substring(0, typeName.IndexOf("Info"))}: {field}");
                 }
             }
         }
 
-        private void AssertSectionInfoNotNull(object sectionInfo)
-        {
-            if (sectionInfo == null)
-            {
+        private void AssertSectionInfoNotNull(object sectionInfo) {
+            if (sectionInfo == null) {
                 var typeName = sectionInfo.GetType().Name;
                 throw new Exception($"{typeName.Substring(0, typeName.IndexOf("Info"))} was null");
             }
