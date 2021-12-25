@@ -29,11 +29,14 @@
                     var currentRedSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 1);
                     var currentGreenSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 0);
                     var greenSectionMultiplier = -100 / currentGreenSection.BeatLength;
+                    var sliderParams = ObjectParams as SliderParams;
 
-                    var sliderLength = (ObjectParams as SliderParams).Length;
+                    var sliderLength = sliderParams.Length;
                     var sliderMultiplier = beatmap.Difficulty.SliderMultiplier * greenSectionMultiplier;
                     var beatLength = currentRedSection.BeatLength;
-                    return sliderLength / (sliderMultiplier * 100) * beatLength;
+                    var slides = sliderParams.Slides;
+
+                    return sliderLength / (sliderMultiplier * 100) * beatLength * slides;
                 case HitObjectType.Spinner:
                     return (ObjectParams as SpinnerParams).EndTime - Time;
                 default:
