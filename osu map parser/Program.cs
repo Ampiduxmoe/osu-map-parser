@@ -206,7 +206,7 @@ namespace osu_map_parser {
                 var fullFileName = $"{shortFileName}.txt";
                 try {
                     var hitobjectToSimpleString = new Func<HitObject, string>(
-                        o => $"{o.Time},{(int)(o.GetKeypressDuration(b) ?? 0)}"
+                        o => $"{o.Time},{(int)Math.Round(o.GetKeypressDuration(b) ?? 0)}"
                     );
                     File.WriteAllText(
                         fullFileName,
@@ -276,7 +276,7 @@ namespace osu_map_parser {
             foreach (HitObject o in beatmap.Hitobjects.List) {
                 var offset = o.Time;
                 var length = o.GetKeypressDuration(beatmap) ?? 0;
-                output.Add(new SimpleHitobject(offset, (int)length));
+                output.Add(new SimpleHitobject(offset, (int)Math.Round(length)));
             }
             return output.ToArray();
         }
