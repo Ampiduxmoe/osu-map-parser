@@ -18,14 +18,21 @@
         }
 
         // Provide beatmap when trying to get slider length
-        public decimal? GetHitObjectLength(Beatmap beatmap = null) {
+        public decimal? GetKeypressDuration(Beatmap beatmap = null) {
             switch (GetHitObjectType()) {
                 case HitObjectType.Hitcircle:
                     return null;
                 case HitObjectType.Slider:
+                    if (beatmap == null) {
+                        throw new System.Exception("No beatmap provided to determine length of a slider");
+                    }
+                    var currentRedSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 1);
+                    var currentGreenSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 0);
+                    var greenSectionMultiplier = -100 / currentGreenSection.BeatLength;
+
                     var sliderLength = (ObjectParams as SliderParams).Length;
-                    var sliderMultiplier = beatmap.Difficulty.SliderMultiplier;
-                    var beatLength = beatmap.TimingPoints.GetTimingPointAtOffset(Time).BeatLength;
+                    var sliderMultiplier = beatmap.Difficulty.SliderMultiplier * greenSectionMultiplier;
+                    var beatLength = currentRedSection.BeatLength;
                     return sliderLength / (sliderMultiplier * 100) * beatLength;
                 case HitObjectType.Spinner:
                     return (ObjectParams as SpinnerParams).EndTime - Time;

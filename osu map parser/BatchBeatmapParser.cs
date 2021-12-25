@@ -47,6 +47,7 @@ namespace osu_map_parser {
             LogFileName = $@"{currentTime}.log";
 
             File.Delete("old_fields.txt");
+            Console.WriteLine("Parsing your osu! Songs directory...");
             foreach (var songDir in songDirs) {
                 var files = Directory.EnumerateFiles(songDir, "*.osu");
                 foreach (var file in files) {
@@ -81,6 +82,10 @@ namespace osu_map_parser {
                     }
                 }
             }
+            CompletionDate = DateTime.Now;
+            var secondsElapsed = (CompletionDate - StartDate).TotalSeconds;
+            Console.WriteLine($"Done in {secondsElapsed:f2}s");
+            Console.WriteLine($"Parsed maps: {StdBeatmapsParsed}");
         }
 
         public IEnumerable<Beatmap> ParseFolderVerbose
@@ -110,6 +115,7 @@ namespace osu_map_parser {
 
             var versionsWithoutAR = new List<int?>();
             File.Delete("old_fields.txt");
+            Console.WriteLine("Parsing your osu songs directory...\n");
             foreach (var songDir in songDirs) {
                 var files = Directory.EnumerateFiles(songDir, "*.osu");
                 foreach (var file in files) {

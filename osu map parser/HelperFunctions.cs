@@ -26,6 +26,27 @@ namespace osu_map_parser {
                 }
                 return answer;
             }
+
+            public static bool GetUserAnswerYesNo(string question, bool endWithNewline = true) {
+                return new List<string>() { "yes", "y", "" }.Contains(
+                    GetUserAnswer(question + " [yes/y/ ] to confirm, anything else to cancel.").Trim().ToLower()
+                );
+            }
+        }
+
+        public class Timer {
+            public DateTime? StartTime { get; private set; } = null;
+            public DateTime? EndTime { get; private set; } = null;
+
+            public Timer Start() {
+                StartTime = DateTime.Now;
+                return this;
+            }
+
+            public double Stop() {
+                EndTime = DateTime.Now;
+                return (EndTime.Value - StartTime.Value).TotalSeconds;
+            }
         }
     }
 }
