@@ -16,8 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="latest_release\**" />
     <Compile Remove="lexer\**" />
+    <EmbeddedResource Remove="latest_release\**" />
     <EmbeddedResource Remove="lexer\**" />
+    <None Remove="latest_release\**" />
     <None Remove="lexer\**" />
   </ItemGroup>
 
