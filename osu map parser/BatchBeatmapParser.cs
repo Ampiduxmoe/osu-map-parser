@@ -1,4 +1,4 @@
-using osu_map_parser.beatmap;
+﻿using osu_map_parser.beatmap;
 using osu_map_parser.beatmap.sections.utils;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,11 @@ namespace osu_map_parser {
         public int? BeatmapsTotal { get; private set; } = null;
         public int? StdBeatmapsFound { get; private set; } = null;
         public int? StdBeatmapsParsed { get; private set; } = null;
+
+        public BatchBeatmapParser() {
+            var currentTime = DateTime.Now.ToString("s").Replace("T", " ").Replace(":", "-");
+            LogFileName = $@"{currentTime}.log";
+        }
 
         public struct SearchPatterns {
             public string Folder;
@@ -42,9 +47,6 @@ namespace osu_map_parser {
             BeatmapsTotal = 0;
             StdBeatmapsFound = 0;
             StdBeatmapsParsed = 0;
-
-            var currentTime = StartDate.ToString("s").Replace("T", " ").Replace(":", "-");
-            LogFileName = $@"{currentTime}.log";
 
             File.Delete("old_fields.txt");
             Console.WriteLine("Parsing your osu! Songs directory...");
@@ -109,9 +111,6 @@ namespace osu_map_parser {
             BeatmapsTotal = 0;
             StdBeatmapsFound = 0;
             StdBeatmapsParsed = 0;
-
-            var currentTime = StartDate.ToString("s").Replace("T", " ").Replace(":", "-");
-            LogFileName = $@"{currentTime}.log";
 
             var versionsWithoutAR = new List<int?>();
             File.Delete("old_fields.txt");
