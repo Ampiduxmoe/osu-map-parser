@@ -1,4 +1,4 @@
-﻿using osu_map_parser.beatmap;
+using osu_map_parser.beatmap;
 using osu_map_parser.beatmap.sections.utils;
 using System;
 using System.Collections.Generic;
@@ -129,8 +129,8 @@ namespace osu_map_parser {
                     catch (Exception e) {
                         WriteColored(
                             $"Could not parse {file}",
-                            ConsoleColor.Red,
-                            Console.ForegroundColor
+                            ConsoleColor.DarkRed,
+                            ConsoleColor.White
                         );
                         using (var sw = File.AppendText(LogFileName)) {
                             sw.WriteLine($"Could not parse {file}:\n{e.Message}\n");

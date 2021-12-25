@@ -238,8 +238,8 @@ namespace osu_map_parser {
                 catch (Exception e) {
                     WriteColored(
                         $"Could not serialize {shortFileName}",
-                        ConsoleColor.Red,
-                        Console.ForegroundColor
+                        ConsoleColor.DarkRed,
+                        ConsoleColor.White
                     );
                     using (var sw = File.AppendText(logFileName)) {
                         sw.WriteLine($"Could not serialize {shortFileName}:\n{e.Message}\n");
@@ -281,8 +281,8 @@ namespace osu_map_parser {
                 catch (Exception e) {
                     WriteColored(
                         $"Could not serialize {kv.Key}",
-                        ConsoleColor.Red,
-                        Console.ForegroundColor
+                        ConsoleColor.DarkRed,
+                        ConsoleColor.White
                     );
                     using (var sw = File.AppendText(logFileName)) {
                         sw.WriteLine($"Could not serialize {kv.Key}:\n{e.Message}\n");
