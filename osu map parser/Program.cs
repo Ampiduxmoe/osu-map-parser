@@ -39,38 +39,59 @@ namespace osu_map_parser {
 
             #region cmd args processing
             var p = new OptionSet() {
-                $"Usage: {exeName} [OPTIONS]+",
-                $"Example: {exeName} -o test --gamefolder=\"c:\\osu!\" --song=vinxis --difficulty=\"three dimensions\" --halt --h-simple -vda",
+                $"Usage: ",
+                $"{exeName} [OPTIONS]+",
+                $"Example: ", 
+                (
+                    $"{exeName} -o my_folder --gamefolder=\"c:\\osu!\" " + 
+                    "--song=vinxis --difficulty=\"three dimensions\" --halt --h-simple -vda"
+                ),
                 "",
                 "Program that converts osu! beatmaps to other formats",
                 "",
-                { "o=", "Output folder. If none specified, outputs files in current directory.", 
+                { "o=", 
+                    "Output folder. If none specified, outputs files in current directory.", 
                     v => outputFolder = $@"{v}\" },
                 "",
-                { "gamefolder=", "Your osu! folder (must contain Songs folder in it).", 
+                { "gamefolder=", 
+                    "Your osu! folder (must contain Songs folder in it).", 
                     v => osuPath = v },
-                { "song=", "Artist/song name search pattern (folder name in your Songs folder, actually).", 
+                { "song=", 
+                    (
+                        "Artist/song name search pattern (folder name in your Songs folder, actually). " +
+                        "Case insensitive." + 
+                        "It is recommended to specify this option if your Songs directory is huge, " + 
+                        "since it decreases amount of maps that will be parsed."
+                    ), 
                     v => searchString = v },
-                { "difficulty=", "Difficulty name search pattern.", 
+                { "difficulty=", 
+                    "Difficulty name search pattern. Case insensitive.", 
                     v => difficultyPattern = v },
                 "",
-                { "fast",  "Parse Songs folder only once. Converts to multiple formats faster but requires more memory.", 
+                { "fast",  
+                    "Parse Songs folder only once. Converts to multiple formats faster but requires more memory.", 
                     v => fast = v != null },
-                { "halt",  "Do not exit program after completion.", 
+                { "halt",  
+                    "Do not exit program after completion.", 
                     v => halt = v != null },
-                { "h-simple",  "Create file with hitobjects listed in format of 'offset0,length0,offset1,length1...'", 
+                { "h-simple",  
+                    "Create file with hitobjects listed in format of 'offset0,length0,offset1,length1...'", 
                     v => { getSimpleTimings = v != null; conversionChosen = true; } },
-                { "h-simple-json",  "Create json file with hitobjects listed in format '[{{start:0,length: 0}},{{...}}...]'.", 
+                { "h-simple-json",  
+                    "Create json file with hitobjects listed in format '[{{start:0,length: 0}},{{...}}...]'.", 
                     v => { getSimpleJson = v != null; conversionChosen = true;  } },
                 "",
-                { "v",  "Verbose: show parsing process in detail.", 
+                { "v",  
+                    "Verbose: show parsing process in detail.", 
                     v => verbose = v != null },
-                { "d",  "Detailed: if verbose, show parsed maps info in detail.", 
+                { "d",  
+                    "Detailed: if verbose, show parsed maps info in detail.", 
                     v => detailed = v != null },
-                { "a",  "Additional info: if verbose, show additional info that is probably useless.", 
+                { "a",  
+                    "Additional info: if verbose, show additional info that is probably useless.", 
                     v => showAdditionalInfo = v != null },
                 "",
-                { "h|help",  "show this message and exit", 
+                { "h|help",  "Show this message and exit", 
                     v => show_help = v != null },
             };
 
