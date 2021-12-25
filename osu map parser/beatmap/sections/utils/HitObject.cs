@@ -27,8 +27,9 @@
                         throw new System.Exception("No beatmap provided to determine length of a slider");
                     }
                     var currentRedSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 1);
+                    currentRedSection ??= beatmap.TimingPoints.GetNextTimingPoint(Time, 1);
                     var currentGreenSection = beatmap.TimingPoints.GetTimingPointAtOffset(Time, 0);
-                    var greenSectionMultiplier = -100 / currentGreenSection.BeatLength;
+                    var greenSectionMultiplier = currentGreenSection != null ? -100 / currentGreenSection.BeatLength : 1;
                     var sliderParams = ObjectParams as SliderParams;
 
                     var sliderLength = sliderParams.Length;

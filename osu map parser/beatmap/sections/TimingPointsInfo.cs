@@ -10,8 +10,15 @@ namespace osu_map_parser.beatmap.sections {
             if (uninherited.HasValue) {
                 query = query.Where(v => v.Uninherited == uninherited.Value);
             }
-            return query.OrderBy(v => v.Time).Last();
+            return query.OrderBy(v => v.Time).LastOrDefault();
+        }
+
+        public TimingPoint GetNextTimingPoint(int offset, byte? uninherited = null) {
+            var query = List.Where(v => v.Time > offset);
+            if (uninherited.HasValue) {
+                query = query.Where(v => v.Uninherited == uninherited.Value);
+            }
+            return query.OrderBy(v => v.Time).FirstOrDefault();
         }
     }
-    
 }
