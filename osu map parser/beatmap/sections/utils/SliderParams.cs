@@ -8,5 +8,9 @@ namespace osu_map_parser.beatmap.sections.utils {
         public decimal Length;
         public List<int> EdgeSounds;
         public List<EdgeSet> EdgeSets;
+
+        public CurveType GetCurveType() {
+            return (CurveType)CurveType;
+        }
     }
 }

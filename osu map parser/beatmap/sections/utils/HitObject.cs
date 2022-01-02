@@ -44,5 +44,33 @@
                     throw new System.Exception("Could not determine type of hitobject");
             }
         }
+
+        public SliderParams GetSliderParams() {
+            if (GetHitObjectType() == HitObjectType.Slider) {
+                return ObjectParams as SliderParams;
+            }
+            throw new System.Exception("Error getting SliderParams. HitObject was not of slider type.");
+        }
+
+        public SliderParams GetSliderParamsOrNull() {
+            if (GetHitObjectType() == HitObjectType.Slider) {
+                return ObjectParams as SliderParams;
+            }
+            return null;
+        }
+
+        public SpinnerParams GetSpinnerParams() {
+            if (GetHitObjectType() == HitObjectType.Spinner) {
+                return ObjectParams as SpinnerParams;
+            }
+            throw new System.Exception("Error getting SpinnerParams. HitObject was not of spinner type.");
+        }
+
+        public SpinnerParams GetSpinnerParamsOrNull() {
+            if (GetHitObjectType() == HitObjectType.Spinner) {
+                return ObjectParams as SpinnerParams;
+            }
+            return null;
+        }
     }
 }
