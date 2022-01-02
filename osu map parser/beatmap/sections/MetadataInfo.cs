@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+
 namespace osu_map_parser.beatmap.sections {
-    class MetadataInfo {
+    public class MetadataInfo {
         public string Title;
         public string TitleUnicode;
         public string Artist;

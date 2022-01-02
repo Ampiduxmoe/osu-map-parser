@@ -1,7 +1,8 @@
 ﻿using osu_map_parser.beatmap.sections;
+using osu_map_parser.files;
 
 namespace osu_map_parser.beatmap {
-    class Beatmap {
+    public class Beatmap {
         public readonly SourceFile SourceFile;
         public readonly int? FileFormatVersion;
         public readonly GeneralInfo General;

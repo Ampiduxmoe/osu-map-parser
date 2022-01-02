@@ -1,5 +1,5 @@
 ﻿namespace osu_map_parser.beatmap.sections.utils {
-    class TimingPoint {
+    public class TimingPoint {
         public decimal Time;
         public decimal BeatLength;
         public int Meter;

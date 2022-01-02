@@ -1,7 +1,7 @@
 ﻿using System.IO;
 
-namespace osu_map_parser {
-    class SourceFile {
+namespace osu_map_parser.files {
+    public class SourceFile {
         public readonly string Path;
         public readonly string[] Lines;
 

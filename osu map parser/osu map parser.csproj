@@ -6,7 +6,7 @@
     <RootNamespace>osu_map_parser</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Authors>Ampiduxmoe</Authors>
-    <Version>0.1</Version>
+    <Version>0.2</Version>
     <Description>a program that allows you to convert .osu files to C# objects</Description>
     <AssemblyName>bmap_parser</AssemblyName>
   </PropertyGroup>

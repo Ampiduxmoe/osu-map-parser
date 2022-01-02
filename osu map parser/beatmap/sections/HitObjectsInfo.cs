@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace osu_map_parser.beatmap.sections {
-    class HitObjectsInfo {
+    public class HitObjectsInfo {
         public List<HitObject> List;
     }
 }

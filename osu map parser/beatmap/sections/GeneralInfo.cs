@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+
 namespace osu_map_parser.beatmap.sections {
-    class GeneralInfo {
+    public class GeneralInfo {
         public string AudioFilename;
         public int AudioLeadIn = 0;
         public string AudioHash;

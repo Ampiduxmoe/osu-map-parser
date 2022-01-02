@@ -1,13 +1,15 @@
-﻿using osu_map_parser.beatmap;
-using osu_map_parser.beatmap.sections.utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using osu_map_parser.beatmap;
+using osu_map_parser.beatmap.sections.utils;
+using osu_map_parser.files;
 using static osu_map_parser.HelperFunctions.CLI;
 
 namespace osu_map_parser {
-    class BatchBeatmapParser {
+    public class BatchBeatmapParser {
         public DateTime StartDate { get; private set; }
         public DateTime CompletionDate { get; private set; }
         public string LogFileName { get; private set; } = null;

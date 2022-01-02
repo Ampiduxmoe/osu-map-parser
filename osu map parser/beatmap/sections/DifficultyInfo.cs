@@ -1,5 +1,5 @@
 ﻿namespace osu_map_parser.beatmap.sections {
-    class DifficultyInfo {
+    public class DifficultyInfo {
         public decimal HPDrainRate;
         public decimal CircleSize;
         public decimal OverallDifficulty;

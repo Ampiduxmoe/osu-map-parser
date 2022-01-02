@@ -1,5 +1,5 @@
 ﻿namespace osu_map_parser.beatmap.sections.utils {
-    class HitObject {
+    public class HitObject {
         public int X;
         public int Y;
         public int Time;

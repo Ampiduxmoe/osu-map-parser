@@ -1,18 +1,20 @@
-﻿using osu_map_parser.beatmap;
-using osu_map_parser.beatmap.sections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Linq;
-using osu_map_parser.beatmap.sections.utils;
 using System.IO;
+
+using osu_map_parser.beatmap;
+using osu_map_parser.beatmap.sections;
+using osu_map_parser.beatmap.sections.utils;
+using osu_map_parser.files;
 
 namespace osu_map_parser {
     // Currently does not fully support old file formats and game modes other than standard
     // Fully supports osu file format v14 except events
-    class Parser {
+    public class Parser {
         public readonly SourceFile SourceFile;
 
         private int currerntLineNo;
@@ -75,7 +77,13 @@ namespace osu_map_parser {
                 }
             }
             catch (Exception e) {
-                throw new Exception(SourceFile.CounstructErrorMessage(e.Message, currerntLineNo, currentInlineCursorPos));
+                throw new Exception(
+                    SourceFile.CounstructErrorMessage(
+                        e.Message, 
+                        currerntLineNo, 
+                        currentInlineCursorPos
+                    )
+                );
             }
             AssertSectionInfoNotNull(generalInfo);
             AssertSectionInfoNotNull(metadataInfo);
